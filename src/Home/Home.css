@@ -245,25 +245,6 @@
   padding-block: var(--lm-s2);
 }
 
-.lm-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--lm-s2);
-  min-height: var(--lm-tap);
-  padding: 0 var(--lm-s4);
-  border-radius: var(--lm-r-control);
-  color: #000000;
-  font-weight: 500;
-  flex: none;
-}
-.lm-logo__icon {
-  width: 20px;
-  height: 20px;
-}
-.lm-logo__text {
-  font-size: 15px;
-}
-
 /* Search + area picker live in the bar. They take the slack between the logo
    and the nav, so the bar keeps its shape as the viewport changes. */
 .lm-header__controls {
@@ -279,7 +260,9 @@
   min-width: 0;
 }
 .lm-header__controls .lm-location {
-  flex: 1 1 42%;
+  /* Compact: a fixed basis instead of a share of the row, so the search box
+     takes the slack. */
+  flex: 0 1 190px;
   min-width: 0;
 }
 /* Both were drawn at 62px for the hero panel, which outgrows the bar. Height
@@ -364,6 +347,66 @@
   gap: var(--lm-s2);
 }
 
+/* Wallet balance chip in the bar. */
+.lm-wallet-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lm-s2);
+  min-height: var(--lm-tap);
+  padding: 0 var(--lm-s3);
+  border: 1px solid var(--lm-line);
+  border-radius: var(--lm-r-chip);
+  background: var(--lm-tile);
+  color: var(--lm-brand-ink);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.lm-wallet-chip:hover {
+  background: var(--lm-plan-bg);
+}
+.lm-wallet-chip__skeleton {
+  display: inline-block;
+  width: 44px;
+  height: 14px;
+}
+
+/* "Schedule food delivery": a nav button that opens a Mon–Fri picker. */
+.lm-schedule {
+  position: relative;
+}
+.lm-schedule__panel {
+  position: absolute;
+  top: calc(100% + var(--lm-s2));
+  inset-inline-end: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--lm-s3);
+  width: min(92vw, 320px);
+  padding: var(--lm-s4);
+  border: 1px solid var(--lm-line);
+  border-radius: var(--lm-r-card);
+  background: var(--lm-surface);
+  box-shadow: 0 8px 22px rgba(15, 59, 44, 0.12);
+}
+.lm-schedule__panel[hidden] {
+  display: none;
+}
+.lm-schedule__title {
+  font-weight: 500;
+  color: var(--lm-brand-ink);
+}
+.lm-schedule__hint {
+  margin-top: calc(var(--lm-s2) * -1);
+  font-size: 13px;
+  color: var(--lm-muted);
+}
+.lm-schedule__panel .lm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .lm-cart {
   position: relative;
   display: inline-flex;
@@ -403,13 +446,24 @@
 .lm-mobile-menu[hidden] {
   display: none;
 }
+.lm-mobile-menu__location {
+  padding-block: var(--lm-s2) var(--lm-s3);
+  border-bottom: 1px solid var(--lm-line);
+}
+.lm-mobile-menu li + li {
+  border-top: 1px solid var(--lm-line);
+}
 .lm-mobile-menu a {
   display: flex;
   align-items: center;
   gap: var(--lm-s3);
-  min-height: var(--lm-tap);
+  min-height: 48px;
   color: var(--lm-brand-ink);
   font-size: 15px;
+}
+.lm-mobile-menu .lm-nav__icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* -------------------------------------------------------------------- Hero */
@@ -423,12 +477,28 @@
   padding: clamp(24px, 4vw, 48px);
   border-radius: var(--lm-r-panel);
   background: linear-gradient(135deg, var(--lm-hero-from), var(--lm-hero-to));
+  position: relative;
+  isolation: isolate;
+}
+
+/* Animated waves sit behind the content; the gradient above is the fallback
+   while WebGL loads or if it is unavailable. */
+.lm-hero__waves {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Clip the waves to the rounded hero here, not on .lm-hero, so overhanging
+     content such as the stamp is never cut off. */
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 /* The hero stacks down the middle on one shared measure. Centring is done
    with flex/justify rather than `text-align: center` on .lm-hero, which would
    cascade into the quick card and re-centre its copy. */
 .lm-hero__right {
+  position: relative;
   width: min(100%, 720px);
 }
 
@@ -482,41 +552,17 @@
   margin-top: var(--lm-s5);
 }
 
-.lm-hero__trust {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--lm-s4);
-  margin-top: var(--lm-s5);
+/* Stamp keyframes; the Stamp component carries its styling as utilities. */
+@keyframes lm-stamp-press {
+  from {
+    opacity: 0;
+    scale: 1.5;
+  }
 }
-.lm-hero__trust li {
-  display: flex;
-  align-items: flex-start;
-  /* Pairs sit centred in their cell, but icon-then-text stays left-aligned
-     inside the pair so the label and its sub-line share an edge. */
-  justify-content: center;
-  text-align: start;
-  gap: var(--lm-s3);
-}
-.lm-hero__trust-icon {
-  width: 20px;
-  height: 20px;
-  color: var(--lm-brand);
-  flex: none;
-  margin-top: 2px;
-}
-.lm-hero__trust span span {
-  display: block;
-}
-.lm-hero__trust strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--lm-brand-ink);
-}
-.lm-hero__trust span span:last-child {
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--lm-muted);
+@keyframes lm-stamp-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Search */
@@ -1720,15 +1766,20 @@
   .lm-header__right {
     margin-inline-start: auto;
   }
-
-  /* Nav is gone at this width, so the controls take their own row. */
-  .lm-header__bar {
-    flex-wrap: wrap;
+  /* The chip sits mid-bar, so a chip-anchored panel would run off-screen.
+     Anchor to the (sticky) header and span the gutters instead. */
+  .lm-schedule {
+    position: static;
   }
+  .lm-schedule__panel {
+    inset-inline: var(--lm-gutter);
+    width: auto;
+  }
+
+  /* Search lives in the sticky <MobileSearch /> bar and the area picker in the
+     mobile menu, so the bar's own controls row is dropped. */
   .lm-header__controls {
-    order: 3;
-    flex-basis: 100%;
-    max-width: none;
+    display: none;
   }
 
   .lm-ai__right {
@@ -1758,15 +1809,11 @@
   .lm-quick__tiles {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .lm-hero__trust {
-    grid-template-columns: 1fr;
-  }
-  .lm-header__controls {
-    flex-wrap: wrap;
-  }
-  .lm-header__controls .lm-search,
-  .lm-header__controls .lm-location {
-    flex-basis: 100%;
+  /* Tightest bars: the wallet chip keeps its balance but drops padding so
+     logo + wallet + menu fit on one row down to 320px. */
+  .lm-wallet-chip {
+    padding: 0 var(--lm-s2);
+    font-size: 13px;
   }
   .lm-kits {
     grid-template-columns: 1fr;

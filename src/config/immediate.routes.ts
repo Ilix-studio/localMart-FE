@@ -1,4 +1,3 @@
-import SignInPage from "../pages/Customer/Auth/SignInPage";
 import CartPage from "../Common/Cart/CartPage";
 import CategoryPage from "../Category/CategoryPage";
 import CheckoutPage from "../Checkout/CheckoutPage";
@@ -10,7 +9,6 @@ export const immediateRoutes = [
   { path: "/category/:slug", component: CategoryPage },
   { path: "/cart", component: CartPage },
   { path: "/checkout", component: CheckoutPage },
-  { path: "/signin", component: SignInPage },
 ];
 
 export const fallbackRoute = {

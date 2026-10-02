@@ -25,6 +25,13 @@ export const driverAuthApi = apiSlice.injectEndpoints({
       query: (body) => ({ url: "/drivers/login", method: "POST", body }),
       transformResponse: (res: Envelope<DriverLoginResponse>) => res.data,
     }),
+    driverRegister: builder.mutation<
+      DriverLoginResponse,
+      { name: string; email: string; password: string; phoneNumber?: string }
+    >({
+      query: (body) => ({ url: "/drivers/register", method: "POST", body }),
+      transformResponse: (res: Envelope<DriverLoginResponse>) => res.data,
+    }),
     driverGoogleAuth: builder.mutation<DriverLoginResponse, { idToken: string }>({
       query: (body) => ({ url: "/drivers/auth/google", method: "POST", body }),
       transformResponse: (res: Envelope<DriverLoginResponse>) => res.data,
@@ -32,5 +39,7 @@ export const driverAuthApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useDriverLoginMutation, useDriverGoogleAuthMutation } =
+export const {
+  useDriverLoginMutation,
+  useDriverRegisterMutation, useDriverGoogleAuthMutation } =
   driverAuthApi;

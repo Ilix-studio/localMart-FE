@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import { CloseIcon, MenuIcon, ProfileIcon, StorefrontIcon } from "./Icons";
+import { Link } from "react-router-dom";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { Logo } from "../../Common/Logo/Logo";
+import { CloseIcon, MenuIcon, ProfileIcon } from "./Icons";
 import { LocationPicker } from "./LocationPicker";
 import { SearchBar } from "./SearchBar";
+import { ScheduleDelivery } from "./ScheduleDelivery";
 
-const NAV = [{ href: "/account", Icon: ProfileIcon }];
+const NAV = [{ href: "/account", label: "Account", Icon: ProfileIcon }];
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pinned, setPinned] = useState(true);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  // Same breakpoint as the 768px block in Home.css where the nav collapses.
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -48,8 +55,9 @@ export function Header() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  // An open mobile menu rides inside the bar, so it holds the bar in place.
-  const shown = pinned || open;
+  // An open mobile menu or schedule panel rides inside the bar, so it holds
+  // the bar in place.
+  const shown = pinned || open || scheduleOpen;
 
   return (
     <header
@@ -64,29 +72,28 @@ export function Header() {
       <div className='lm-header__strip' aria-hidden='true' />
 
       <div className='lm-header__bar'>
-        <a className='lm-logo' href='/' aria-label='Local Mart — home'>
-          <StorefrontIcon className='lm-logo__icon' />
-          <span className='lm-logo__text'>Local Mart</span>
-        </a>
+        <Logo to='/' />
 
         <div className='lm-header__controls'>
+          {!isMobile && <LocationPicker />}
           <SearchBar />
-          <LocationPicker />
         </div>
 
         <nav className='lm-nav' aria-label='Main'>
           <ul className='lm-nav__list'>
-            {NAV.map(({ href, Icon }) => (
+            {NAV.map(({ href, label, Icon }) => (
               <li key={href}>
-                <a className='lm-nav__link' href={href}>
+                <Link className='lm-nav__link' to={href} aria-label={label}>
                   <Icon className='lm-nav__icon' />
-                </a>
+                  <span className='lm-nav__label'>{label}</span>
+                </Link>
               </li>
             ))}
           </ul>
         </nav>
 
         <div className='lm-header__right'>
+          <ScheduleDelivery onOpenChange={setScheduleOpen} />
           <button
             ref={menuButtonRef}
             type='button'
@@ -102,12 +109,18 @@ export function Header() {
       </div>
 
       <div id='lm-mobile-menu' className='lm-mobile-menu' hidden={!open}>
+        {isMobile && (
+          <div className='lm-mobile-menu__location'>
+            <LocationPicker />
+          </div>
+        )}
         <ul>
-          {NAV.map(({ href, Icon }) => (
+          {NAV.map(({ href, label, Icon }) => (
             <li key={href}>
-              <a href={href}>
+              <Link to={href} onClick={() => setOpen(false)}>
                 <Icon className='lm-nav__icon' />
-              </a>
+                {label}
+              </Link>
             </li>
           ))}
         </ul>
@@ -115,3 +128,12 @@ export function Header() {
     </header>
   );
 }
+
+// Hide the support bot on the hero section and show
+// it on /signin?redirect=/checkout and /checkout
+// Instead show
+// in mobile view, take the        <LocationPicker /> in the header
+// and move it to the top of the mobile menu, above the nav links.
+// and in desktop view, keep it in the header as is.
+// Create a new search bottom in home page, onClick search and Mic Button should
+// appear in the search bar, and the search bar should be sticky on scroll.

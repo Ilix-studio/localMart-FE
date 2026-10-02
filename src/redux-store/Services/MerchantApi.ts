@@ -25,6 +25,13 @@ export const merchantAuthApi = apiSlice.injectEndpoints({
       query: (body) => ({ url: "/merchants/login", method: "POST", body }),
       transformResponse: (res: Envelope<MerchantLoginResponse>) => res.data,
     }),
+    merchantRegister: builder.mutation<
+      MerchantLoginResponse,
+      { name: string; email: string; password: string; phoneNumber?: string }
+    >({
+      query: (body) => ({ url: "/merchants/register", method: "POST", body }),
+      transformResponse: (res: Envelope<MerchantLoginResponse>) => res.data,
+    }),
     merchantGoogleAuth: builder.mutation<MerchantLoginResponse, { idToken: string }>({
       query: (body) => ({ url: "/merchants/auth/google", method: "POST", body }),
       transformResponse: (res: Envelope<MerchantLoginResponse>) => res.data,
@@ -32,5 +39,7 @@ export const merchantAuthApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useMerchantLoginMutation, useMerchantGoogleAuthMutation } =
+export const {
+  useMerchantLoginMutation,
+  useMerchantRegisterMutation, useMerchantGoogleAuthMutation } =
   merchantAuthApi;

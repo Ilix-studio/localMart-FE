@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Footer } from "../Home/components/Footer";
 import { Header } from "../Home/components/Header";
+import { SupportBot } from "../Home/components/SupportBot";
 import {
   useAddAddressMutation,
   useListAddressesQuery,
@@ -251,6 +252,8 @@ export default function CheckoutPage() {
       </main>
 
       <Footer />
+
+      <SupportBot />
     </div>
   );
 }

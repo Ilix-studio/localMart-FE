@@ -16,6 +16,7 @@
 @import './Category/Category.css' layer(components);
 @import './pages/Customer/Auth/Auth.css' layer(components);
 @import './Common/Cart/Cart.css' layer(components);
+@import './Common/Logo/Logo.css' layer(components);
 @import './Checkout/Checkout.css' layer(components);
 
 /* Tailwind's preflight is deliberately left out. The reset in @layer base below

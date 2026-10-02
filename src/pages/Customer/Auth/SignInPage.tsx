@@ -5,6 +5,7 @@ import type { ConfirmationResult } from "firebase/auth";
 
 import { Footer } from "../../../Home/components/Footer";
 import { Header } from "../../../Home/components/Header";
+import { SupportBot } from "../../../Home/components/SupportBot";
 import { confirmOtp, sendOtp } from "../../../lib/firebasePhoneAuth";
 import { useFirebaseLoginMutation } from "../../../redux-store/Services/CustomerApi";
 import { setCredentials } from "../../../redux-store/Slices/authSlice";
@@ -152,6 +153,9 @@ export default function SignInPage() {
         <div id={RECAPTCHA_CONTAINER_ID} />
       </main>
       <Footer />
+
+      {/* Help is only offered here when the shopper is on their way to pay. */}
+      {redirectTo.split(/[?#]/)[0] === "/checkout" && <SupportBot />}
     </div>
   );
 }
