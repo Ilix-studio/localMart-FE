@@ -1,5 +1,5 @@
 import { CATEGORIES, categoryPath } from '../../lib/catalog/categories';
-import { ArrowRightIcon, CalendarIcon, CategoryIcon, GiftIcon, SparkleIcon } from './Icons';
+import { ArrowRightIcon, CalendarIcon, GiftIcon, SparkleIcon } from './Icons';
 import { Tag } from './Tag';
 
 /** The white card on the right of the hero: four shop tiles, then the
@@ -20,7 +20,7 @@ export function CategoryQuickCard() {
               href={categoryPath(c.slug)}
             >
               <span className="lm-quick__thumb">
-                <CategoryIcon name={c.icon} className="lm-quick__icon" />
+                <img src={c.image} alt={c.title} loading="lazy" />
                 <span className="lm-quick__badge">{c.tileLabel}</span>
               </span>
               <span className="lm-quick__name">{c.title}</span>

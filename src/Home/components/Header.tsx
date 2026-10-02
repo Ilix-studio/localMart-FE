@@ -1,23 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  CartIcon,
-  CloseIcon,
-  GridIcon,
-  MenuIcon,
-  OrdersIcon,
-  ProfileIcon,
-  SearchIcon,
-  StorefrontIcon,
-} from "./Icons";
+import { CloseIcon, MenuIcon, ProfileIcon, StorefrontIcon } from "./Icons";
+import { LocationPicker } from "./LocationPicker";
+import { SearchBar } from "./SearchBar";
 
-const NAV = [
-  { href: "/browse", label: "Browse", Icon: GridIcon },
-  { href: "/search", label: "Search", Icon: SearchIcon },
-  { href: "/orders", label: "Orders", Icon: OrdersIcon },
-  { href: "/account", label: "Customer profile", Icon: ProfileIcon },
-];
+const NAV = [{ href: "/account", Icon: ProfileIcon }];
 
-export function Header({ cartCount = 0 }: { cartCount?: number }) {
+export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pinned, setPinned] = useState(true);
@@ -81,13 +69,17 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
           <span className='lm-logo__text'>Local Mart</span>
         </a>
 
+        <div className='lm-header__controls'>
+          <SearchBar />
+          <LocationPicker />
+        </div>
+
         <nav className='lm-nav' aria-label='Main'>
           <ul className='lm-nav__list'>
-            {NAV.map(({ href, label, Icon }) => (
+            {NAV.map(({ href, Icon }) => (
               <li key={href}>
                 <a className='lm-nav__link' href={href}>
                   <Icon className='lm-nav__icon' />
-                  <span>{label}</span>
                 </a>
               </li>
             ))}
@@ -95,22 +87,6 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
         </nav>
 
         <div className='lm-header__right'>
-          <a
-            className='lm-nav__link lm-nav__link--cart'
-            href='/cart'
-            aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`}
-          >
-            <span className='lm-cart'>
-              <CartIcon className='lm-nav__icon' />
-              {cartCount > 0 && (
-                <span className='lm-cart__count' aria-hidden='true'>
-                  {cartCount > 99 ? "99+" : cartCount}
-                </span>
-              )}
-            </span>
-            <span className='lm-nav__cart-label'>Cart</span>
-          </a>
-
           <button
             ref={menuButtonRef}
             type='button'
@@ -127,11 +103,10 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
 
       <div id='lm-mobile-menu' className='lm-mobile-menu' hidden={!open}>
         <ul>
-          {NAV.map(({ href, label, Icon }) => (
+          {NAV.map(({ href, Icon }) => (
             <li key={href}>
               <a href={href}>
                 <Icon className='lm-nav__icon' />
-                <span>{label}</span>
               </a>
             </li>
           ))}
